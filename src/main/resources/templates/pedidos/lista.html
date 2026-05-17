@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos</title>
+    <link rel="stylesheet" 
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-4">
+    <span class="navbar-brand">🍽️ Gestión Restaurante</span>
+    <a th:href="@{/dashboard}" class="btn btn-outline-light btn-sm">← Dashboard</a>
+</nav>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>📋 Pedidos</h4>
+        <a th:href="@{/pedidos/nuevo}" class="btn btn-success">+ Nuevo Pedido</a>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Mesa</th>
+                <th>Mesero</th>
+                <th>Estado</th>
+                <th>Total</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="p : ${pedidos}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.numeroMesa}"></td>
+                <td th:text="${p.mesero.nombre}"></td>
+                <td>
+                    <span th:text="${p.estado}"
+                          th:class="${p.estado.name() == 'pendiente'} ? 'badge bg-warning' :
+                                    (${p.estado.name() == 'en_preparacion'} ? 'badge bg-info' :
+                                    (${p.estado.name() == 'listo'} ? 'badge bg-primary' :
+                                    (${p.estado.name() == 'entregado'} ? 'badge bg-secondary' :
+                                    (${p.estado.name() == 'pagado'} ? 'badge bg-success' : 
+                                     'badge bg-danger'))))">
+                    </span>
+                </td>
+                <td th:text="'$' + ${#numbers.formatDecimal(p.total, 1, 'COMMA', 0, 'POINT')}"></td>
+                <td th:text="${p.fecha}"></td>
+                <td>
+                    <a th:if="${p.estado.name() == 'pendiente'}"
+                       th:href="@{/pedidos/estado/{id}/{estado}(id=${p.id}, estado='en_preparacion')}"
+                       class="btn btn-sm btn-info">En preparación</a>
+
+                    <a th:if="${p.estado.name() == 'en_preparacion'}"
+                       th:href="@{/pedidos/estado/{id}/{estado}(id=${p.id}, estado='listo')}"
+                       class="btn btn-sm btn-primary">Listo</a>
+
+                    <a th:if="${p.estado.name() == 'listo'}"
+                       th:href="@{/pedidos/estado/{id}/{estado}(id=${p.id}, estado='entregado')}"
+                       class="btn btn-sm btn-secondary">Entregado</a>
+
+                    <a th:if="${p.estado.name() == 'entregado'}"
+                       th:href="@{/pagos/nuevo/{id}(id=${p.id})}"
+                       class="btn btn-sm btn-success">Registrar Pago</a>
+
+                    <a th:if="${p.estado.name() == 'pendiente'}"
+                       th:href="@{/pedidos/estado/{id}/{estado}(id=${p.id}, estado='cancelado')}"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('¿Cancelar pedido?')">Cancelar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
