@@ -26,7 +26,7 @@ public class Usuario {
     private Rol rol;
 
     public enum Rol {
-        admin, mesero, cajero
+        admin, mesero, cajero, cocinero
     }
 
     // Getters y Setters
