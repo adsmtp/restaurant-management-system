@@ -12,7 +12,9 @@
     <span class="navbar-brand">🍽️ Gestión Restaurante</span>
     <div class="d-flex align-items-center gap-3">
         <span class="text-white" sec:authentication="name"></span>
-        <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-outline-light btn-sm">Cerrar sesión</button>
+</form>
     </div>
 </nav>
 
